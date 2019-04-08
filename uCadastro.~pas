@@ -1,0 +1,494 @@
+unit uCadastro;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs,uBanco, Grids, DBGrids, StdCtrls, ExtCtrls, DBCtrls, jpeg,
+  Buttons, ExtDlgs,db, DBSearchEdit;
+
+type
+  TFrmCadastro = class(TForm)
+    pnDados: TPanel;
+    Label1: TLabel;
+    edCodigo: TEdit;
+    edCandi: TEdit;
+    Label2: TLabel;
+    btnIncluir: TBitBtn;
+    btnAlterar: TBitBtn;
+    btnExcluir: TBitBtn;
+    btnSalvar: TBitBtn;
+    btnVoltar: TBitBtn;
+    opfoto: TOpenPictureDialog;
+    imFoto: TImage;
+    Label3: TLabel;
+    btnCancelar: TBitBtn;
+    Grid: TDBGrid;
+    DBSearchEdit1: TDBSearchEdit;
+    procedure btnVoltarClick(Sender: TObject);
+    procedure btnIncluirClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure imFotoClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure btnExcluirClick(Sender: TObject);
+    procedure edCodigoKeyPress(Sender: TObject; var Key: Char);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure GridCellClick(Column: TColumn);
+    procedure DBSearchEdit1Click(Sender: TObject);
+    procedure DBSearchEdit1KeyPress(Sender: TObject; var Key: Char);
+  private
+    function insertBanco: boolean;
+    function LoadInfo:boolean;
+    procedure LoadPhoto;
+    function updateCadastro: boolean;
+    function deleteCadastro: boolean;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCadastro: TFrmCadastro;
+  var StreamFotoPadrao: tstream;
+      op : String;
+implementation
+
+uses IBQuery, IBCustomDataSet;
+
+{$R *.dfm}
+
+function Dc_MessageDlg(Msg: string; AType: TMsgDlgType; AButtons:
+  TMsgDlgButtons; IndiceHelp: LongInt; DefButton: TMOdalResult = mrNone;
+  Portugues: Boolean = True): Word;
+var
+  I: Integer;
+  Mensagem: TForm;
+begin
+  Mensagem := CreateMessageDialog(Msg, AType, Abuttons);
+  Mensagem.HelpContext := IndiceHelp;
+  with Mensagem do 
+  begin 
+    for i := 0 to ComponentCount - 1 do 
+    begin 
+      if (Components[i] is TButton) then 
+      begin 
+        if (TButton(Components[i]).ModalResult = DefButton) then 
+        begin 
+          ActiveControl := TWincontrol(Components[i]); 
+        end; 
+      end; 
+    end; 
+    if Portugues then 
+    begin 
+      if Atype = mtConfirmation then 
+        Caption := 'Confirmação' 
+      else if AType = mtWarning then 
+        Caption := 'Aviso' 
+      else if AType = mtError then 
+        Caption := 'Erro' 
+      else if AType = mtInformation then 
+        Caption := 'Informação'; 
+    end; 
+  end; 
+  if Portugues then 
+  begin 
+    TButton(Mensagem.FindComponent('YES')).Caption := '&Sim'; 
+    TButton(Mensagem.FindComponent('NO')).Caption := '&Não'; 
+    TButton(Mensagem.FindComponent('CANCEL')).Caption := '&Cancelar'; 
+    TButton(Mensagem.FindComponent('ABORT')).Caption := '&Abortar'; 
+    TButton(Mensagem.FindComponent('RETRY')).Caption := '&Repetir'; 
+    TButton(Mensagem.FindComponent('IGNORE')).Caption := '&Ignorar'; 
+    TButton(Mensagem.FindComponent('ALL')).Caption := '&Todos'; 
+    TButton(Mensagem.FindComponent('HELP')).Caption := 'A&juda'; 
+  end; 
+  Result := Mensagem.ShowModal; 
+  Mensagem.Free; 
+end;
+
+
+Procedure TFrmCadastro.LoadPhoto;
+var Stream :TStream;
+begin
+  if not (dmbanco.IBTransaction2.InTransaction) then
+            dmbanco.IBTransaction2.StartTransaction;
+
+  with dmbanco.qrySelFoto do
+    begin
+      close;
+      //sql.Clear;
+      //sql.Add('SELECT FOTO FROM CIPEIRO WHERE NUMERO = :NUMERO');
+      //ParamByName('NUMERO').AsString := sgFunc.Cells[0,sgFunc.row];
+      ParamByName('NUMERO').AsString := Grid.DataSource.DataSet.FieldByName(Grid.Columns[0].FieldName).AsString;
+      Open;
+      Stream := CreateBlobStream(FieldByName('FOTO'), bmRead);
+    end;
+
+   imFoto.Picture.Graphic.LoadFromStream(Stream);
+   stream.Free;
+end;
+
+
+function TFrmCadastro.LoadInfo:boolean;
+begin
+    //edCodigo.Text := sgfunc.cells[0,sgfunc.row];
+    //edCandi.Text := sgfunc.cells[1,sgfunc.row];
+    edCodigo.Text := Grid.DataSource.DataSet.FieldByName(Grid.Columns[0].FieldName).AsString;
+    edCandi.Text := Grid.DataSource.DataSet.FieldByName(Grid.Columns[1].FieldName).AsString;
+    result := true;
+end;
+
+
+{function TFrmCadastro.LoadGrid:boolean;
+  var Linha, Coluna: integer;
+begin
+Linha:=1;
+with dmBanco.qryCdastro do
+ begin
+  Close;
+ // SQL.Clear;
+ // SQL.Add('SELECT Campo FROM Tabela');
+  Open;
+  while not(EOF) do
+   begin
+    if sgFunc.RowCount <= Linha then // Adiciona linhas conforme o nº registro
+     sgFunc.RowCount:= sgFunc.RowCount + 1;
+    sgFunc.Cells[0,Linha]:=FieldByName('NUMERO').AsString; // mostra no grid o campo
+    sgFunc.Cells[1,Linha]:=FieldByName('NOME').AsString; // mostra no grid o campo
+
+    Linha:=Linha + 1; // Proxima Linha
+    Next; // Proximo Registro
+   end;
+ end;
+end;}
+
+{function TFrmCadastro.LoadGrid:boolean;
+  var i,numReg:integer;
+
+begin
+      with dmBanco do begin
+       dsetCadastro.close;
+       dsetCadastro.Open;
+       dsetCadastro.Last;
+
+       numReg := dsetCadastro.RecordCount;
+       dsetCadastro.First;
+       //sgFunc.RowCount :=  numReg+1 ;
+
+       while not dsetCadastro.Eof do begin
+        for i:=1 to numReg  do begin
+         sgFunc.Cells[0,i] := dsetCadastro.FieldByName('NUMERO').AsString;
+         sgFunc.Cells[1,i] := dsetcadastro.FieldByName('NOME').AsString;
+         dsetcadastro.Next;
+        end;
+       end;
+     result := true;
+     end;
+end;}
+
+procedure TFrmCadastro.btnVoltarClick(Sender: TObject);
+begin
+ if (OP= 'I') or (op= 'U') then begin
+  if DC_MessageDlg ('VOCÊ ESCOLHEU INSERIR OU ALTERAR UM CANDIDATO, MAS NÃO SALVOU AS INFORMAÇÕES !'+#13+
+      'TEM CERTEZA QUE DESEJA SAIR SEM SALVAR ?', mtwarning, [mbYes, mbNo], 0) = mrNo then exit;
+ end;
+  edCodigo.Color := clGray;
+  edCandi.Color := clGray;
+  edCodigo.Clear;
+  edCandi.Clear;
+  imFoto.Picture.LoadFromFile('c:\cipa\fotocipa.jpg');
+  pnDados.Enabled := false;
+  edCodigo.Enabled := true;
+  Close;
+end;
+
+procedure TFrmCadastro.btnIncluirClick(Sender: TObject);
+
+begin
+ op := 'I';
+ edCodigo.Color := clWhite;
+ edCandi.Color := clWhite;
+ edCodigo.Clear;
+ edCandi.Clear;
+ edCodigo.Enabled := true;
+ pnDados.Enabled := true;
+ imFoto.Picture.LoadFromFile('c:\cipa\fotocipa.jpg');
+end;
+
+procedure LoadGrid;
+begin
+ with dmbanco.qryCdastro do begin
+      Close;
+      SQL.Clear;
+      sql.Add('select * from CIPEIRO ORDER BY 1 DESC');
+      Open;
+      //NUM := FieldByName('NUMERO').AsString;
+      //NOME := FieldByName('NOME').AsString;
+  end;
+end;
+
+
+
+
+function Tfrmcadastro.insertBanco: boolean;
+var
+  msFoto: TMemoryStream;
+  jpgFoto: TJPEGImage;
+  NUM,NOME: STRING;
+begin
+  if not (dmbanco.TransInsCad.InTransaction) then
+            dmbanco.TransInsCad.StartTransaction;
+
+   with dmbanco.qryInsCadastro do begin
+      Close;
+      SQL.Clear;
+      sql.Add('select NUMERO,NOME from CIPEIRO WHERE NUMERO = '+edCodigo.Text);
+      Open;
+      NUM := FieldByName('NUMERO').AsString;
+      NOME := FieldByName('NOME').AsString;
+  end;
+
+  if (NUM = edCodigo.Text) then begin
+   DC_MessageDlg ('NÚMERO JÁ CADASTRADO PARA O CANDIDATO '+nome, mtInformation, [mbOk], 0);
+   exit;
+  end;
+
+  jpgFoto:=TJPEGImage.Create;
+  jpgFoto.Assign(imFoto.Picture.Graphic);
+  msFoto := TMemoryStream.Create;
+  jpgFoto.SaveToStream(msFoto);
+
+  if not (dmbanco.TransInsCad.InTransaction) then
+            dmbanco.TransInsCad.StartTransaction;
+
+  with dmbanco.qryInsCadastro do
+    begin
+      close;
+      sql.Clear;
+      sql.Add('INSERT INTO CIPEIRO VALUES(:NUMERO,:NOME,:FOTO)');
+      ParamByName('NUMERO').AsString := edCodigo.Text;
+      ParamByName('nome').AsString := edCandi.Text;
+      ParamByName('FOTO').LoadFromStream(msFoto, ftBlob);
+      ExecSql;
+      dmbanco.TransInsCad.Commit;
+
+
+    end;
+    msfoto.Free;
+    jpgFoto.Free;
+
+end;
+
+
+function Tfrmcadastro.updatecadastro: boolean;
+var
+  msFoto: TMemoryStream;
+  jpgFoto: TJPEGImage;
+  num,nome: string;
+begin
+  jpgFoto:=TJPEGImage.Create;
+  jpgFoto.Assign(imFoto.Picture.Graphic);
+  msFoto := TMemoryStream.Create;
+  jpgFoto.SaveToStream(msFoto);
+
+if not (dmbanco.TransUpdCad.InTransaction) then
+            dmbanco.TransUpdCad.StartTransaction;
+
+ {with dmbanco.qryUpdCadastro do begin
+      Close;
+      SQL.Clear;
+      sql.Add('select * from CIPEIRO WHERE NUMERO = '+edCodigo.Text);
+      Open;
+      NUM := FieldByName('NUMERO').AsString;
+      NOME := FieldByName('NOME').AsString;
+  end;
+
+
+  if (NUM = edCodigo.Text) then begin
+   DC_MessageDlg ('NÚMERO JÁ CADASTRADO PARA O CANDIDATO '+nome, mtInformation, [mbOk], 0);
+   exit;
+  end;}
+
+
+  with dmbanco.qryUPDCadastro do begin
+      close;
+      sql.Clear;
+      sql.Add('UPDATE CIPEIRO SET NOME =:NOME,FOTO =:FOTO WHERE NUMERO = :NUMERO');
+      ParamByName('nome').AsString := edCandi.Text;
+      ParamByName('FOTO').LoadFromStream(msFoto, ftBlob);
+      ParamByName('NUMERO').AsString := Grid.DataSource.DataSet.FieldByName(Grid.Columns[0].FieldName).AsString;
+      ExecSql;
+  end;
+  msfoto.Free;
+  jpgFoto.Free;
+  DMBANCO.TransUpdCad.Commit;
+end;
+
+function Tfrmcadastro.deleteCadastro: boolean;
+var
+  msFoto: TMemoryStream;
+  var jpgFoto: TJPEGImage;
+begin
+  jpgFoto:=TJPEGImage.Create;
+  jpgFoto.Assign(imFoto.Picture.Graphic);
+  msFoto := TMemoryStream.Create;
+  jpgFoto.SaveToStream(msFoto);
+
+if not (dmbanco.TransDelCad.InTransaction) then
+            dmbanco.TransDelCad.StartTransaction;
+
+  with dmbanco.qryDeleteCad do
+    begin
+      close;
+      sql.Clear;
+      sql.Add('DELETE FROM CIPEIRO WHERE NUMERO = :numero');
+      //ParamByName('NUMERO').AsString := sgFunc.Cells[0,sgfunc.row];
+       ParamByName('NUMERO').AsString := Grid.DataSource.DataSet.FieldByName(Grid.Columns[0].FieldName).AsString;
+      ExecSql;
+    end;
+    msfoto.Free;
+    DMBANCO.TransDelCad.Commit;
+    result := true;
+
+end;
+
+
+
+procedure TFrmCadastro.btnSalvarClick(Sender: TObject);
+var Column: Tcolumn;
+begin
+if (op = 'I') then begin  //INSERT
+ if (edCodigo.Text = '') or (edCandi.Text = '') then begin
+     DC_MessageDlg ('Preencha os campos NÚMERO e NOME do CANDIDATO', mtInformation, [mbOk], 0);
+     exit;
+ end;
+ insertBanco;
+end;
+
+if (op = 'U') then begin //update
+  if (edCodigo.Text = '') or (edCandi.Text = '') then begin
+     DC_MessageDlg ('Preencha os campos NÚMERO e NOME do CANDIDATO OU SELECIONE NA TABELA ABAIXO !', mtInformation, [mbOk], 0);
+     exit;
+  end;
+  updatecadastro;
+end;
+
+if (op = '') then //O usuario nao escolheu INSERT e nem ALTERAR
+  DC_MessageDlg ('Para SALVAR, você precisa antes INCLUIR ou ALTERAR algum candidato', mtInformation, [mbOk], 0);
+
+ op:='';
+ edCodigo.Color := clGray;
+ edCandi.Color := clGray;
+ edCodigo.Clear;
+ edCandi.clear;
+ imFoto.Picture.LoadFromFile('c:\cipa\fotocipa.jpg');
+ pnDados.Enabled := false;
+ edCodigo.Enabled := true;
+
+ LoadGrid;  
+
+end;
+
+procedure TFrmCadastro.imFotoClick(Sender: TObject);
+begin
+ if (opfoto.Execute) then
+  imFoto.Picture.LoadFromFile(opfoto.FileName);
+end;
+
+procedure TFrmCadastro.FormShow(Sender: TObject);
+
+begin
+ LoadGrid;
+ imFoto.Picture.SaveToFile('c:\cipa\fotocipa.jpg');
+ 
+end;
+
+procedure TFrmCadastro.btnAlterarClick(Sender: TObject);
+begin
+ if op = 'I' then btnCancelarClick(self);
+ If Grid.DataSource.DataSet.FieldByName(Grid.Columns[0].FieldName).AsString = '' then begin
+   ShowMessage('NÃO EXISTEM CANDIDATOS CADASTRADOS PARA SEREM ALTERADOS !' );
+ end
+ else begin
+   if (edCodigo.Text = '' ) or (edCandi.Text = '') then begin
+    DC_MessageDlg ('Para alterar dados de um candidato, selecione-o na tabela abaixo !', mtInformation, [mbOk], 0);
+    exit;
+   end;
+   op := 'U';
+   edCodigo.Enabled := FALSE;
+   edCandi.Color := clMoneyGreen;
+   pnDados.Enabled := true;
+end;
+
+end;
+
+procedure TFrmCadastro.btnExcluirClick(Sender: TObject);
+var conteudo : string;
+begin
+ If Grid.DataSource.DataSet.FieldByName(Grid.Columns[0].FieldName).AsString = '' then begin
+   ShowMessage('NÃO EXISTEM CANDIDATOS CADASTRADOS' );
+ end
+ else begin
+   conteudo := Grid.DataSource.DataSet.FieldByName(Grid.Columns[1].FieldName).AsString;
+  //if DC_MessageDlg ('TEM CERTEZA QUE DESEJA EXCLUIR O CANDIDATO ['+sgFunc.Cells[1,sgfunc.row ] + '] ?', mtwarning, [mbYes, mbNo], 0) = mrYes then begin
+
+  if DC_MessageDlg ('TEM CERTEZA QUE DESEJA EXCLUIR O CANDIDATO ['+conteudo + '] ?', mtwarning, [mbYes, mbNo], 0) = mrYes then begin
+   edCodigo.Color := clGray;
+   edCandi.Color := clGray;
+   edCodigo.Clear;
+   edCandi.Clear;
+   imFoto.Picture.LoadFromFile('c:\cipa\fotocipa.jpg');
+   edCodigo.Enabled := true;
+   pnDados.Enabled := false;
+
+   if deleteCadastro then
+    LoadGrid;
+  end;
+ end;
+
+end;
+
+procedure TFrmCadastro.edCodigoKeyPress(Sender: TObject; var Key: Char);
+begin
+ If not( key in['0'..'9',',',#08,#13] ) then begin
+  beep;
+  key:=#0;
+  ShowMessage('SOMENTE NUMEROS SAO PERMITIDOS !!!');
+  end;
+ if Key =#13 then edCandi.SetFocus; 
+end;
+
+procedure TFrmCadastro.btnCancelarClick(Sender: TObject);
+begin
+ edCodigo.Color := clGray;
+ edCandi.Color := clGray;
+ edCodigo.Clear;
+ edCandi.Clear;
+ pnDados.Enabled := false;
+ OP:='';
+ imFoto.Picture.LoadFromFile('c:\cipa\fotocipa.jpg');
+end;
+
+procedure TFrmCadastro.GridCellClick(Column: TColumn);
+begin
+ LoadPhoto;
+ LoadInfo;
+end;
+
+procedure TFrmCadastro.DBSearchEdit1Click(Sender: TObject);
+begin
+ DBSearchEdit1.Clear;
+end;
+
+procedure TFrmCadastro.DBSearchEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+var i: integer;
+Column:TColumn;
+begin
+if Key=#13 then
+ //grid.SelectedIndex:=1;
+ grid.SetFocus;
+ grid.OnCellClick(Column);
+end;
+
+end.

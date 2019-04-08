@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/09/22 09:41:05.000.459,C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\uReport.pas=</Transaction>
+    <Transaction>2019/03/31 20:35:35.000.982,=C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\uReport.pas</Transaction>
+    <Transaction>2019/03/31 20:44:36.000.627,C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\uReport.pas=</Transaction>
+    <Transaction>2019/04/07 12:19:38.961,=C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\Unit2.pas</Transaction>
+    <Transaction>2019/04/07 12:24:16.377,C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\uRelVotacao.pas=C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\Unit2.pas</Transaction>
+    <Transaction>2019/04/07 12:24:16.377,C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\uRelVotacao.dfm=C:\Users\Mauricio Alencar\Documents\CipaUnificado\Cipa\Unit2.dfm</Transaction>
+  </Transactions>
+</BorlandProject>

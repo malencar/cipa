@@ -1,0 +1,31 @@
+program cipa;
+
+uses
+  Forms,
+  uPrincipal in 'uPrincipal.pas' {frmPrincipal},
+  uImport in 'uImport.pas' {frmImport},
+  uBanco in 'uBanco.pas' {dmBanco: TDataModule},
+  uCadastro in 'uCadastro.pas' {FrmCadastro},
+  uVotacao in 'uVotacao.pas' {FrmVotacao},
+  uFIM in 'uFIM.pas' {frmFIM},
+  uReport in 'uReport.pas' {qrResultado: TQuickRep},
+  uManut in 'uManut.pas' {FrmManut},
+  Unit1 in 'Unit1.pas' {Form1},
+  uPath in 'uPath.pas' {FrmPath};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.CreateForm(TfrmImport, frmImport);
+  Application.CreateForm(TdmBanco, dmBanco);
+  Application.CreateForm(TFrmCadastro, FrmCadastro);
+  Application.CreateForm(TFrmVotacao, FrmVotacao);
+  Application.CreateForm(TfrmFIM, frmFIM);
+  Application.CreateForm(TqrResultado, qrResultado);
+  Application.CreateForm(TFrmManut, FrmManut);
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFrmPath, FrmPath);
+  Application.Run;
+end.

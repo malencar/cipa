@@ -1,0 +1,143 @@
+unit uPrincipal;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Buttons, XPMan,uImport,uCadastro, StdCtrls,UvOTACAO, ExtCtrls,ubanco,iniFiles,
+  jpeg,uRelVotacao;
+
+type
+  TfrmPrincipal = class(TForm)
+    XPManifest1: TXPManifest;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    Label3: TLabel;
+    Label4: TLabel;
+    btnResultado: TSpeedButton;
+    SpeedButton5: TSpeedButton;
+    Image1: TImage;
+    Image2: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
+    procedure btnResultadoClick(Sender: TObject);
+    procedure SpeedButton5Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmPrincipal: TfrmPrincipal;
+
+implementation
+
+uses uManut, Unit1, uPath;
+
+{$R *.dfm}
+
+procedure GravaIni(Arquivo, Sessao, Subsessao, valor: string);
+var
+ArqIni: TIniFile;
+sDirAplicacao: string;
+begin
+sDirAplicacao := 'C:\SINDICO\';
+ArqIni := TIniFile.Create(sDirAplicacao + Arquivo);
+try
+ArqIni.WriteString(Sessao, Subsessao, valor);
+finally
+FreeAndNil(ArqIni);
+end;
+end;
+
+
+function LerIni(Arquivo, Sessao, Subsessao: string): string;
+var
+ArqIni: TIniFile;
+sDirAplicacao: string;
+begin
+sDirAplicacao := 'C:\SINDICO\';
+ArqIni := TIniFile.Create(sDirAplicacao + Arquivo);
+try
+Result := ArqIni.ReadString(Sessao, Subsessao,'' );
+finally
+FreeAndNil(ArqIni);
+end;
+end;
+
+procedure ConectaFireBird(Path: String);
+begin
+      with dmbanco do begin
+       try
+          FDConnection1.Connected := False;
+          FDConnection1.Params.Database := path + ':c:\sindico\cipa.fdb';
+          FDConnection1.Connected := True;
+       except
+         //ibBanco.Connected := False;
+         ShowMessage('Erro ao conectar no banco de dados. Verifique se este computador e o servidor estão em Rede ! ');
+
+       end;
+      end;
+end;
+
+
+
+
+procedure TfrmPrincipal.SpeedButton1Click(Sender: TObject);
+begin
+ frmImport.ShowModal;
+end;
+
+procedure TfrmPrincipal.SpeedButton3Click(Sender: TObject);
+begin
+ Close;
+end;
+
+procedure TfrmPrincipal.SpeedButton2Click(Sender: TObject);
+begin
+ FrmCadastro.ShowModal;
+end;
+
+procedure TfrmPrincipal.SpeedButton4Click(Sender: TObject);
+begin
+ FrmVotacao.ShowModal;
+end;
+
+procedure TfrmPrincipal.btnResultadoClick(Sender: TObject);
+begin
+ Form1.showmodal;
+
+end;
+
+procedure TfrmPrincipal.SpeedButton5Click(Sender: TObject);
+begin
+ FrmManut.showmodal;
+end;
+
+procedure TfrmPrincipal.FormShow(Sender: TObject);
+ var valorChave: string;
+begin
+  if not FileExists('c:\sindico\configuracao.ini') then
+    GravaIni('configuracao.ini','CONFIGURACAO','DATABASE','');
+
+
+  if FileExists('c:\sindico\configuracao.ini') then begin
+    valorChave := LerIni('configuracao.ini','CONFIGURACAO','DATABASE');
+    if  valorChave = '' then begin
+     FrmPath.ShowModal;
+    end
+    else begin
+     ConectaFireBird(LerIni('configuracao.ini','CONFIGURACAO','DATABASE'));
+    end
+   end;
+end;
+
+end.

@@ -1,0 +1,84 @@
+unit uBanco;
+
+interface
+
+uses
+  SysUtils, Classes, IBDatabase, DB, IBQuery, IBCustomDataSet, IBTable;
+
+type
+  TdmBanco = class(TDataModule)
+    ibBanco: TIBDatabase;
+    IBTransaction1: TIBTransaction;
+    DSET: TIBDataSet;
+    DS: TDataSource;
+    DSETRE: TIBStringField;
+    DSETNOME: TIBStringField;
+    DSETCARGO: TIBStringField;
+    DSETSETOR: TIBStringField;
+    DSETSITUACAO: TIBStringField;
+    DSETSEXO: TIBStringField;
+    DSETCCUSTO: TIBStringField;
+    DSETNOME_CCUSTO: TIBStringField;
+    DSETDTNASCIMENTO: TIBStringField;
+    DSETADMISSAO: TIBStringField;
+    dsCadastro: TDataSource;
+    dsetCadastro: TIBDataSet;
+    IBTransaction2: TIBTransaction;
+    dsetCadastroNUMERO: TIBStringField;
+    dsetCadastroNOME: TIBStringField;
+    dsetCadastroFOTO: TBlobField;
+    qryInsCadastro: TIBQuery;
+    dtsFoto: TIBDataSet;
+    dsFoto: TDataSource;
+    dtsFotoFOTO: TBlobField;
+    IBTransaction4: TIBTransaction;
+    dsVotacao: TDataSource;
+    qryVotacao: TIBQuery;
+    qryReport: TIBQuery;
+    dsReport: TDataSource;
+    qryReportNOME: TIBStringField;
+    qryReportTOTAL_VOTOS: TIntegerField;
+    qryBrancos: TIBQuery;
+    dsBrancos: TDataSource;
+    qryBrancosNOME: TIBStringField;
+    qryBrancosTOTAL_VOTOS: TIntegerField;
+    TransLimpar: TIBTransaction;
+    qryLimpar: TIBQuery;
+    qryDeleteCad: TIBQuery;
+    TransDelCad: TIBTransaction;
+    IBTransaction5: TIBTransaction;
+    IBTransaction6: TIBTransaction;
+    qryFoto: TIBQuery;
+    IBTransaction7: TIBTransaction;
+    TransInsCad: TIBTransaction;
+    qryCdastro: TIBQuery;
+    TransSelCad: TIBTransaction;
+    qryCdastroNUMERO: TIBStringField;
+    qryCdastroNOME: TIBStringField;
+    qryCdastroFOTO: TBlobField;
+    qryUPDCadastro: TIBQuery;
+    TransUpdCad: TIBTransaction;
+    qrySelFoto: TIBQuery;
+    qryNulos: TIBQuery;
+    dsNulos: TDataSource;
+    qryReportNUMERO: TIBStringField;
+    qryTotal: TIBQuery;
+    IBTransaction3: TIBTransaction;
+    qryTotalTOTAL: TIntegerField;
+    dsTotal: TDataSource;
+    dsetCadastroID: TSmallintField;
+    qryCdastroID: TSmallintField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  dmBanco: TdmBanco;
+
+implementation
+
+{$R *.dfm}
+
+end.

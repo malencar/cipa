@@ -1,0 +1,165 @@
+object frmImport: TfrmImport
+  Left = 392
+  Top = 73
+  Width = 1087
+  Height = 676
+  Align = alClient
+  Caption = 'Importa'#231#227'o de Arquivo da Planilha Excel'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 240
+    Top = 24
+    Width = 598
+    Height = 22
+    Caption = 'TELA DE IMPORTA'#199#195'O DOS FUNCION'#193'RIOS APTOS A VOTAREM'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 48
+    Top = 80
+    Width = 203
+    Height = 13
+    Caption = 'Escolha o Arquivo a ser importado :'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object lbRec: TLabel
+    Left = 40
+    Top = 168
+    Width = 4
+    Height = 20
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Arial Narrow'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object sgFunc: TStringGrid
+    Left = 40
+    Top = 192
+    Width = 1017
+    Height = 417
+    Color = clCream
+    ColCount = 10
+    DefaultColWidth = 150
+    FixedCols = 0
+    RowCount = 2
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goRowSelect]
+    ParentFont = False
+    TabOrder = 0
+    OnDrawCell = sgFuncDrawCell
+    ColWidths = (
+      120
+      304
+      150
+      182
+      120
+      117
+      102
+      216
+      111
+      97)
+  end
+  object edPath: TEdit
+    Left = 779
+    Top = 64
+    Width = 270
+    Height = 21
+    TabOrder = 1
+    Visible = False
+  end
+  object btnEscolher: TBitBtn
+    Left = 256
+    Top = 64
+    Width = 225
+    Height = 41
+    Caption = 'IMPORTAR ARQUIVO'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 2
+    OnClick = btnEscolherClick
+  end
+  object Button1: TButton
+    Left = 896
+    Top = 64
+    Width = 161
+    Height = 41
+    Caption = '&VOLTAR'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 3
+    OnClick = Button1Click
+  end
+  object pngrid: TPanel
+    Left = 168
+    Top = 280
+    Width = 713
+    Height = 105
+    Caption = 
+      'Aguarde...verificando os funcion'#225'rios j'#225' importados anteriorment' +
+      'e.'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clBlue
+    Font.Height = -21
+    Font.Name = 'Arial Narrow'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 4
+    Visible = False
+  end
+  object btnLimpar: TButton
+    Left = 488
+    Top = 64
+    Width = 273
+    Height = 41
+    Caption = '&LIMPAR TABELA DE FUNCION'#193'RIOS'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 5
+    OnClick = btnLimparClick
+  end
+  object opDlg: TOpenDialog
+    DefaultExt = '*.xls'
+    Filter = 'Arquivos do Excel|*.xls'
+    Left = 136
+    Top = 24
+  end
+end

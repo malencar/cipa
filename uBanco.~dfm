@@ -1,0 +1,601 @@
+object dmBanco: TdmBanco
+  OldCreateOrder = False
+  Left = 611
+  Top = 225
+  Height = 576
+  Width = 990
+  object ibBanco: TIBDatabase
+    Connected = True
+    DatabaseName = 'C:\CIPA\CIPA.FDB'
+    Params.Strings = (
+      'user_name=sysdba'
+      'password=masterkey')
+    LoginPrompt = False
+    IdleTimer = 0
+    SQLDialect = 3
+    TraceFlags = []
+    Left = 24
+    Top = 32
+  end
+  object IBTransaction1: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 304
+    Top = 400
+  end
+  object DSET: TIBDataSet
+    Database = ibBanco
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    DeleteSQL.Strings = (
+      'delete from FUNCIONARIOS')
+    InsertSQL.Strings = (
+      'insert into FUNCIONARIOS'
+      '  (RE, NOME, CARGO, SETOR, SITUACAO, SEXO, CCUSTO, NOME_CCUSTO, '
+      'DTNASCIMENTO, '
+      '   ADMISSAO)'
+      'values'
+      
+        '  (:RE, :NOME, :CARGO, :SETOR, :SITUACAO, :SEXO, :CCUSTO, :NOME_' +
+        'CCUSTO, '
+      '   :DTNASCIMENTO, :ADMISSAO)')
+    RefreshSQL.Strings = (
+      'Select '
+      '  RE,'
+      '  NOME,'
+      '  CARGO,'
+      '  SETOR,'
+      '  SITUACAO,'
+      '  SEXO,'
+      '  CCUSTO,'
+      '  NOME_CCUSTO,'
+      '  DTNASCIMENTO,'
+      '  ADMISSAO'
+      'from FUNCIONARIOS '
+      'where'
+      '  RE = :RE and'
+      '  NOME = :NOME and'
+      '  CARGO = :CARGO and'
+      '  SETOR = :SETOR and'
+      '  SITUACAO = :SITUACAO and'
+      '  SEXO = :SEXO and'
+      '  CCUSTO = :CCUSTO and'
+      '  NOME_CCUSTO = :NOME_CCUSTO and'
+      '  DTNASCIMENTO = :DTNASCIMENTO and'
+      '  ADMISSAO = :ADMISSAO')
+    SelectSQL.Strings = (
+      'select * from FUNCIONARIOS')
+    ModifySQL.Strings = (
+      'update FUNCIONARIOS'
+      'set'
+      '  RE = :RE,'
+      '  NOME = :NOME,'
+      '  CARGO = :CARGO,'
+      '  SETOR = :SETOR,'
+      '  SITUACAO = :SITUACAO,'
+      '  SEXO = :SEXO,'
+      '  CCUSTO = :CCUSTO,'
+      '  NOME_CCUSTO = :NOME_CCUSTO,'
+      '  DTNASCIMENTO = :DTNASCIMENTO,'
+      '  ADMISSAO = :ADMISSAO'
+      'where'
+      '  RE = :OLD_RE and'
+      '  NOME = :OLD_NOME and'
+      '  CARGO = :OLD_CARGO and'
+      '  SETOR = :OLD_SETOR and'
+      '  SITUACAO = :OLD_SITUACAO and'
+      '  SEXO = :OLD_SEXO and'
+      '  CCUSTO = :OLD_CCUSTO and'
+      '  NOME_CCUSTO = :OLD_NOME_CCUSTO and'
+      '  DTNASCIMENTO = :OLD_DTNASCIMENTO and'
+      '  ADMISSAO = :OLD_ADMISSAO')
+    Left = 200
+    Top = 400
+    object DSETRE: TIBStringField
+      FieldName = 'RE'
+      Origin = 'FUNCIONARIOS.RE'
+      Size = 11
+    end
+    object DSETNOME: TIBStringField
+      FieldName = 'NOME'
+      Origin = 'FUNCIONARIOS.NOME'
+      Size = 51
+    end
+    object DSETCARGO: TIBStringField
+      FieldName = 'CARGO'
+      Origin = 'FUNCIONARIOS.CARGO'
+      Size = 35
+    end
+    object DSETSETOR: TIBStringField
+      FieldName = 'SETOR'
+      Origin = 'FUNCIONARIOS.SETOR'
+      Size = 26
+    end
+    object DSETSITUACAO: TIBStringField
+      FieldName = 'SITUACAO'
+      Origin = 'FUNCIONARIOS.SITUACAO'
+      Size = 23
+    end
+    object DSETSEXO: TIBStringField
+      FieldName = 'SEXO'
+      Origin = 'FUNCIONARIOS.SEXO'
+      Size = 17
+    end
+    object DSETCCUSTO: TIBStringField
+      FieldName = 'CCUSTO'
+      Origin = 'FUNCIONARIOS.CCUSTO'
+      Size = 16
+    end
+    object DSETNOME_CCUSTO: TIBStringField
+      FieldName = 'NOME_CCUSTO'
+      Origin = 'FUNCIONARIOS.NOME_CCUSTO'
+      Size = 28
+    end
+    object DSETDTNASCIMENTO: TIBStringField
+      FieldName = 'DTNASCIMENTO'
+      Origin = 'FUNCIONARIOS.DTNASCIMENTO'
+    end
+    object DSETADMISSAO: TIBStringField
+      FieldName = 'ADMISSAO'
+      Origin = 'FUNCIONARIOS.ADMISSAO'
+      Size = 16
+    end
+  end
+  object DS: TDataSource
+    DataSet = DSET
+    Left = 24
+    Top = 88
+  end
+  object dsCadastro: TDataSource
+    DataSet = qryCdastro
+    Left = 104
+    Top = 32
+  end
+  object dsetCadastro: TIBDataSet
+    Database = ibBanco
+    Transaction = IBTransaction2
+    BufferChunks = 1000
+    CachedUpdates = False
+    DeleteSQL.Strings = (
+      'delete from CIPEIRO'
+      'where'
+      '  NUMERO = :OLD_NUMERO')
+    InsertSQL.Strings = (
+      'insert into CIPEIRO'
+      '  (NUMERO, NOME, FOTO)'
+      'values'
+      '  (:NUMERO, :NOME, :FOTO)')
+    RefreshSQL.Strings = (
+      'Select '
+      '  NUMERO,'
+      '  NOME,'
+      '  FOTO'
+      'from CIPEIRO '
+      'where'
+      '  NUMERO = :NUMERO and'
+      '  NOME = :NOME and'
+      '  FOTO = :FOTO')
+    SelectSQL.Strings = (
+      'select * from CIPEIRO ORDER BY 1')
+    ModifySQL.Strings = (
+      'update CIPEIRO'
+      'set'
+      '  NUMERO = :NUMERO,'
+      '  NOME = :NOME,'
+      '  FOTO = :FOTO'
+      'where'
+      '  NUMERO = :OLD_NUMERO')
+    Left = 200
+    Top = 32
+    object dsetCadastroID: TSmallintField
+      FieldName = 'ID'
+      Origin = 'CIPEIRO.ID'
+      Visible = False
+    end
+    object dsetCadastroNUMERO: TIBStringField
+      FieldName = 'NUMERO'
+      Origin = 'CIPEIRO.NUMERO'
+      Size = 10
+    end
+    object dsetCadastroNOME: TIBStringField
+      FieldName = 'NOME'
+      Origin = 'CIPEIRO.NOME'
+      Size = 51
+    end
+    object dsetCadastroFOTO: TBlobField
+      FieldName = 'FOTO'
+      Origin = 'CIPEIRO.FOTO'
+      Size = 8
+    end
+  end
+  object IBTransaction2: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 296
+    Top = 40
+  end
+  object qryInsCadastro: TIBQuery
+    Database = ibBanco
+    Transaction = TransInsCad
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = False
+    SQL.Strings = (
+      'SELECT NUMERO,NOME,FOTO FROM CIPEIRO')
+    Left = 448
+    Top = 144
+  end
+  object dtsFoto: TIBDataSet
+    Database = ibBanco
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    SelectSQL.Strings = (
+      'select FOTO from CIPEIRO'
+      'where numero = :numero')
+    Left = 200
+    Top = 320
+    object dtsFotoFOTO: TBlobField
+      FieldName = 'FOTO'
+      Origin = 'CIPEIRO.FOTO'
+      Size = 8
+    end
+  end
+  object dsFoto: TDataSource
+    DataSet = dtsFoto
+    Left = 96
+    Top = 320
+  end
+  object IBTransaction4: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 304
+    Top = 104
+  end
+  object dsVotacao: TDataSource
+    DataSet = qryVotacao
+    Left = 104
+    Top = 96
+  end
+  object qryVotacao: TIBQuery
+    Database = ibBanco
+    Transaction = IBTransaction4
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'select  count(*) from votacao')
+    Left = 200
+    Top = 96
+  end
+  object qryReport: TIBQuery
+    Database = ibBanco
+    Transaction = IBTransaction5
+    BufferChunks = 1000
+    CachedUpdates = False
+    DataSource = dsVotacao
+    SQL.Strings = (
+      
+        'SELECT NUMERO,NOME, COUNT(VOTO) AS TOTAL_VOTOS FROM votacao wher' +
+        'e NOME NOT IN ('#39'BRANCO'#39','#39'NULO'#39')'
+      'GROUP by NUMERO,NOME,VOTO order BY TOTAL_VOTOS  DESC')
+    Left = 200
+    Top = 168
+    object qryReportNUMERO: TIBStringField
+      DisplayLabel = 'CHAPA'
+      FieldName = 'NUMERO'
+      Origin = 'VOTACAO.NUMERO'
+      Size = 10
+    end
+    object qryReportNOME: TIBStringField
+      FieldName = 'NOME'
+      Origin = 'VOTACAO.NOME'
+      Size = 51
+    end
+    object qryReportTOTAL_VOTOS: TIntegerField
+      DisplayLabel = 'VOTOS'
+      FieldName = 'TOTAL_VOTOS'
+      Required = True
+    end
+  end
+  object dsReport: TDataSource
+    DataSet = qryReport
+    Left = 96
+    Top = 168
+  end
+  object qryBrancos: TIBQuery
+    Database = ibBanco
+    Transaction = IBTransaction6
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'SELECT NOME, COUNT(VOTO) AS TOTAL_VOTOS FROM votacao'
+      ' where NOME IN ('#39'BRANCO'#39','#39'NULO'#39')'
+      ' GROUP by NOME,VOTO order BY TOTAL_VOTOS  DESC')
+    Left = 200
+    Top = 240
+    object qryBrancosNOME: TIBStringField
+      FieldName = 'NOME'
+      Origin = 'VOTACAO.NOME'
+      Size = 51
+    end
+    object qryBrancosTOTAL_VOTOS: TIntegerField
+      FieldName = 'TOTAL_VOTOS'
+      Required = True
+    end
+  end
+  object dsBrancos: TDataSource
+    DataSet = qryBrancos
+    Left = 96
+    Top = 240
+  end
+  object TransLimpar: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 576
+    Top = 400
+  end
+  object qryLimpar: TIBQuery
+    Database = ibBanco
+    Transaction = TransLimpar
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'SELECT * FROM CIPEIRO WHERE NUMERO =1')
+    Left = 448
+    Top = 392
+  end
+  object qryDeleteCad: TIBQuery
+    Database = ibBanco
+    Transaction = TransDelCad
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'DELETE FROM CIPEIRO WHERE NUMERO = :numero')
+    Left = 448
+    Top = 320
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'numero'
+        ParamType = ptUnknown
+      end>
+  end
+  object TransDelCad: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 568
+    Top = 320
+  end
+  object IBTransaction5: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 304
+    Top = 176
+  end
+  object IBTransaction6: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 304
+    Top = 248
+  end
+  object qryFoto: TIBQuery
+    Database = ibBanco
+    Transaction = IBTransaction7
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'SELECT NUMERO,NOME,FOTO FROM CIPEIRO WHERE NUMERO = :NUMERO')
+    Left = 448
+    Top = 472
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'NUMERO'
+        ParamType = ptUnknown
+      end>
+  end
+  object IBTransaction7: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 576
+    Top = 472
+  end
+  object TransInsCad: TIBTransaction
+    Active = True
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 568
+    Top = 152
+  end
+  object qryCdastro: TIBQuery
+    Database = ibBanco
+    Transaction = TransSelCad
+    Active = True
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'select * from CIPEIRO ORDER BY 1')
+    Left = 448
+    Top = 96
+    object qryCdastroID: TSmallintField
+      FieldName = 'ID'
+      Origin = 'CIPEIRO.ID'
+      Visible = False
+    end
+    object qryCdastroNUMERO: TIBStringField
+      FieldName = 'NUMERO'
+      Origin = 'CIPEIRO.NUMERO'
+      Size = 10
+    end
+    object qryCdastroNOME: TIBStringField
+      FieldName = 'NOME'
+      Origin = 'CIPEIRO.NOME'
+      Size = 51
+    end
+    object qryCdastroFOTO: TBlobField
+      FieldName = 'FOTO'
+      Origin = 'CIPEIRO.FOTO'
+      Visible = False
+      Size = 8
+    end
+  end
+  object TransSelCad: TIBTransaction
+    Active = True
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 560
+    Top = 96
+  end
+  object qryUPDCadastro: TIBQuery
+    Database = ibBanco
+    Transaction = TransUpdCad
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      
+        'UPDATE CIPEIRO SET NOME =:NOME,FOTO =:FOTO WHERE NUMERO = :NUMER' +
+        'O')
+    Left = 448
+    Top = 216
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'NOME'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'FOTO'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'NUMERO'
+        ParamType = ptUnknown
+      end>
+  end
+  object TransUpdCad: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 568
+    Top = 216
+  end
+  object qrySelFoto: TIBQuery
+    Database = ibBanco
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'SELECT FOTO FROM CIPEIRO WHERE NUMERO = :NUMERO')
+    Left = 696
+    Top = 96
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'NUMERO'
+        ParamType = ptUnknown
+      end>
+  end
+  object qryNulos: TIBQuery
+    Database = ibBanco
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'SELECT NOME, COUNT(VOTO) AS TOTAL_VOTOS FROM votacao'
+      ' where NOME IN ('#39'NULO'#39')'
+      ' GROUP by NOME,VOTO order BY TOTAL_VOTOS  DESC')
+    Left = 760
+    Top = 240
+  end
+  object dsNulos: TDataSource
+    DataSet = qryNulos
+    Left = 704
+    Top = 240
+  end
+  object qryTotal: TIBQuery
+    Database = ibBanco
+    Transaction = IBTransaction3
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'SELECT COUNT(*) as TOTAL FROM votacao'
+      ' ')
+    Left = 776
+    Top = 304
+    object qryTotalTOTAL: TIntegerField
+      FieldName = 'TOTAL'
+      Required = True
+    end
+  end
+  object IBTransaction3: TIBTransaction
+    Active = False
+    DefaultDatabase = ibBanco
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    AutoStopAction = saNone
+    Left = 840
+    Top = 304
+  end
+  object dsTotal: TDataSource
+    DataSet = qryTotal
+    Left = 712
+    Top = 304
+  end
+end

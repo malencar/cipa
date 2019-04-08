@@ -1,0 +1,191 @@
+unit uManut;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, Buttons;
+
+type
+  TFrmManut = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    pnSenha: TPanel;
+    edSenha: TEdit;
+    Button4: TButton;
+    Button2: TButton;
+    BitBtn4: TBitBtn;
+    procedure Button2Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure edSenhaKeyPress(Sender: TObject; var Key: Char);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmManut: TFrmManut;
+
+implementation
+
+uses uBanco, uPath;
+
+{$R *.dfm}
+
+function Dc_MessageDlg(Msg: string; AType: TMsgDlgType; AButtons:
+  TMsgDlgButtons; IndiceHelp: LongInt; DefButton: TMOdalResult = mrNone;
+  Portugues: Boolean = True): Word;
+var
+  I: Integer;
+  Mensagem: TForm;
+begin
+  Mensagem := CreateMessageDialog(Msg, AType, Abuttons);
+  Mensagem.HelpContext := IndiceHelp;
+  with Mensagem do
+  begin
+    for i := 0 to ComponentCount - 1 do
+    begin
+      if (Components[i] is TButton) then
+      begin
+        if (TButton(Components[i]).ModalResult = DefButton) then
+        begin
+          ActiveControl := TWincontrol(Components[i]);
+        end;
+      end;
+    end;
+    if Portugues then
+    begin
+      if Atype = mtConfirmation then
+        Caption := 'Confirmação'
+      else if AType = mtWarning then
+        Caption := 'Aviso'
+      else if AType = mtError then
+        Caption := 'Erro'
+      else if AType = mtInformation then
+        Caption := 'Informação'; 
+    end; 
+  end;
+  if Portugues then 
+  begin 
+    TButton(Mensagem.FindComponent('YES')).Caption := '&Sim';
+    TButton(Mensagem.FindComponent('NO')).Caption := '&Não'; 
+    TButton(Mensagem.FindComponent('CANCEL')).Caption := '&Cancelar'; 
+    TButton(Mensagem.FindComponent('ABORT')).Caption := '&Abortar';
+    TButton(Mensagem.FindComponent('RETRY')).Caption := '&Repetir'; 
+    TButton(Mensagem.FindComponent('IGNORE')).Caption := '&Ignorar'; 
+    TButton(Mensagem.FindComponent('ALL')).Caption := '&Todos';
+    TButton(Mensagem.FindComponent('HELP')).Caption := 'A&juda'; 
+  end;
+  Result := Mensagem.ShowModal; 
+  Mensagem.Free;
+end;
+
+
+function deleteVotacao: boolean;
+begin
+
+if not (dmbanco.FDTransaction7.Connection.InTransaction) then
+            dmbanco.FDTransaction7.StartTransaction;
+
+  with dmbanco.FDQryLimpar do begin
+      close;
+      sql.Clear;
+      sql.Add('DELETE FROM VOTACAO');
+      ExecSql;
+  end;
+    DMBANCO.FDTransaction7.Commit;
+    result := true;
+end;
+
+
+function deleteCandidatos: boolean;
+begin
+
+if not (dmbanco.FDTransaction7.Connection.InTransaction) then
+            dmbanco.FDTransaction7.StartTransaction;
+
+  with dmbanco.FDQryLimpar do
+    begin
+      close;
+      sql.Clear;
+      sql.Add('DELETE FROM CIPEIRO');
+      ExecSql;
+    end;
+    DMBANCO.FDTransaction7.Commit;
+    result := true;
+end;
+
+procedure TFrmManut.Button2Click(Sender: TObject);
+begin
+ Close;
+end;
+
+procedure TFrmManut.Button4Click(Sender: TObject);
+begin
+ if edsenha.Text = '' then begin
+   ShowMessage('Por favor, digite uma senha !');
+   exit;
+ end;  
+ if edSenha.Text = 'A1S2D3F4' then begin
+  edSenha.Clear;
+  pnSenha.Visible := false;
+ end
+ else begin
+  ShowMessage('SENHA INCORRETA !!!');
+  edSenha.Clear;
+ end; 
+end;
+
+procedure TFrmManut.FormShow(Sender: TObject);
+begin
+ pnSenha.Align := alClient;
+ pnSenha.Visible := true;
+ edSenha.SetFocus;
+end;
+
+procedure TFrmManut.edSenhaKeyPress(Sender: TObject; var Key: Char);
+begin
+ if key=#13 then Button4Click(self);
+end;
+
+procedure TFrmManut.BitBtn1Click(Sender: TObject);
+begin
+if DC_MessageDlg ('ATENÇÃO !!!TODOS OS VOTOS SERÃO EXCLUÍDOS !!!'+#13+'TEM CERTEZA QUE DESEJA LIMPAR A TABELA DE VOTAÇÃO ?'
+     , mtwarning, [mbYes, mbNo], 0) = mrYes then begin
+     try
+      if deleteVotacao then DC_MessageDlg ('Todos os votos foram excluídos com sucesso! '
+     , mtInformation,[mbOK],0);
+     except
+       DC_MessageDlg ('OCORREU UM ERRO AO LIMPAR A TABELA DE VOTAÇÃO.'
+     , mterror,[mbOK],0);
+     end;
+
+ end;
+end;
+
+procedure TFrmManut.BitBtn2Click(Sender: TObject);
+begin
+if DC_MessageDlg ('ATENÇÃO !!! TODOS OS CANDIDATOS SERÃO EXCLUÍDOS !!!'+#13+'TEM CERTEZA QUE DESEJA LIMPAR A TABELA DE CANDIDATOS ?'
+     , mtwarning, [mbYes, mbNo], 0) = mrYes then begin
+     deleteCandidatos;
+ end;
+end;
+
+procedure TFrmManut.BitBtn3Click(Sender: TObject);
+begin
+ FrmPath.showmodal;
+end;
+
+procedure TFrmManut.BitBtn4Click(Sender: TObject);
+begin
+ cLOSE;
+end;
+
+end.

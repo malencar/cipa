@@ -1,0 +1,144 @@
+object frmRelVotacao: TfrmRelVotacao
+  Left = 0
+  Top = 0
+  Caption = 'frmRelVotacao'
+  ClientHeight = 601
+  ClientWidth = 790
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object RLReport1: TRLReport
+    Left = 1
+    Top = 0
+    Width = 794
+    Height = 1123
+    DataSource = dmBanco.dsReport
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = []
+    object RLBand1: TRLBand
+      Left = 38
+      Top = 38
+      Width = 718
+      Height = 43
+      BandType = btHeader
+      Color = clSilver
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+      object RLLabel1: TRLLabel
+        Left = 0
+        Top = 0
+        Width = 309
+        Height = 43
+        Align = faClientLeft
+        Caption = 'RESULTADO DA ELEI'#199#195'O'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -24
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = False
+      end
+      object RLSystemInfo1: TRLSystemInfo
+        Left = 600
+        Top = 21
+        Width = 41
+        Height = 16
+        Text = ''
+        Transparent = False
+      end
+    end
+    object RLBand2: TRLBand
+      Left = 38
+      Top = 81
+      Width = 718
+      Height = 32
+      BandType = btColumnHeader
+      object RLLabel2: TRLLabel
+        Left = 13
+        Top = 14
+        Width = 61
+        Height = 16
+        Caption = 'N'#218'MERO'
+      end
+      object RLLabel3: TRLLabel
+        Left = 96
+        Top = 14
+        Width = 144
+        Height = 16
+        Caption = 'NOME DO CANDIDATO'
+      end
+      object RLLabel4: TRLLabel
+        Left = 416
+        Top = 13
+        Width = 70
+        Height = 16
+        Caption = 'QT VOTOS'
+      end
+    end
+    object RLBand3: TRLBand
+      Left = 38
+      Top = 113
+      Width = 718
+      Height = 24
+      AutoSize = True
+      object RLDBText1: TRLDBText
+        Left = 11
+        Top = 0
+        Width = 49
+        Height = 16
+        Align = faTopOnly
+        DataField = 'NUMERO'
+        DataSource = dmBanco.dsReport
+        Text = ''
+      end
+      object RLDBText2: TRLDBText
+        Left = 144
+        Top = 0
+        Width = 43
+        Height = 16
+        Align = faTopOnly
+        DataField = 'NOME'
+        DataSource = dmBanco.dsReport
+        Text = ''
+      end
+      object RLDBText3: TRLDBText
+        Left = 416
+        Top = 0
+        Width = 49
+        Height = 16
+        Align = faTopOnly
+        DataField = 'TOTAL_VOTOS'
+        DataSource = dmBanco.dsReport
+        Text = ''
+      end
+    end
+  end
+  object dsVotacao: TDataSource
+    DataSet = FDQuery2
+    Left = 832
+    Top = 40
+  end
+  object FDQuery2: TFDQuery
+    Connection = dmBanco.FDConnection1
+    SQL.Strings = (
+      'select  count(*) from votacao')
+    Left = 832
+    Top = 96
+  end
+end
